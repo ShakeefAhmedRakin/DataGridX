@@ -7,6 +7,9 @@ export default {
         secondary: "#E7EEF7",
         primary: "#5B7CFD",
       },
+      fontFamily: {
+        main: "Roboto",
+      },
     },
   },
   plugins: [require("daisyui")],
