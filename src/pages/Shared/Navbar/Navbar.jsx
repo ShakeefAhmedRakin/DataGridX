@@ -1,6 +1,11 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import useAuth from "./../../../hooks/useAuth";
+import { MdLogin, MdLogout, MdOutlinePerson4 } from "react-icons/md";
 
 const Navbar = () => {
+  const { user, logOut } = useAuth();
+  const navigate = useNavigate();
+
   // NAVBAR ROUTES
   const links = (
     <>
@@ -47,7 +52,10 @@ const Navbar = () => {
               {links}
             </ul>
           </div>
-          <Link to={"/"} className="text-secondary font-bold text-3xl">
+          <Link
+            to={"/"}
+            className="text-secondary font-bold hidden sm:flex text-3xl"
+          >
             DataGridX
           </Link>
         </div>
@@ -57,9 +65,31 @@ const Navbar = () => {
           </ul>
         </div>
         <div className="navbar-end">
-          <button className="btn uppercase bg-transparent border-secondary text-secondary rounded-none hover:border-secondary hover:bg-secondary hover:text-black">
-            Login
-          </button>
+          {user ? (
+            <>
+              <h1 className="flex gap-2 items-center mr-4 text-secondary text-xl border-r-2 pr-2">
+                <MdOutlinePerson4 className="text-2xl"></MdOutlinePerson4>
+                {user.displayName}
+              </h1>
+              <button
+                onClick={() => logOut()}
+                className="btn uppercase bg-red-600 border-red-600 text-secondary rounded-none hover:border-red-700 hover:bg-red-700 hover:text-white"
+              >
+                <MdLogin className="text-2xl"></MdLogin>
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => navigate("/login")}
+                className="btn uppercase bg-transparent border-secondary text-secondary rounded-none hover:border-secondary hover:bg-secondary hover:text-black"
+              >
+                <MdLogout className="text-2xl"></MdLogout>
+                Login
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

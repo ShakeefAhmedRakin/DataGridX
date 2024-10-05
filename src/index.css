@@ -3,24 +3,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-::-webkit-scrollbar {
-  width: 5px;
-}
-
-::-webkit-scrollbar-track {
-  background: white;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #00aa6e;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #028a5a;
-}
-
-.textarea-auto {
-  resize: none;
-  overflow: hidden;
-}
