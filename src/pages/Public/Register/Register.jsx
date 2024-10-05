@@ -2,22 +2,23 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useContext } from "react";
 import { AuthContext } from "../../../providers/AuthProvider";
+import useAxiosPublic from "../../../hooks/useAxiosPublic";
 
 const Register = () => {
   const { createUser, addUsername, signIn, logOut } = useContext(AuthContext);
+  const axiosPublic = useAxiosPublic(); // Use the Axios public instance
 
   const navigate = useNavigate();
 
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
 
     const form = e.target;
-
-    // Corrected field name here
     const username = form.name.value;
     const email = form.email.value;
     const password = form.password.value;
 
+    // Validation for password complexity
     if (password.length < 6) {
       toast.error("Password should be at least 6 characters or longer");
       return;
@@ -29,32 +30,27 @@ const Register = () => {
       return;
     }
 
-    createUser(email, password)
-      .then(() => {
-        addUsername(username)
-          .then(() => {
-            logOut().then(() => {
-              signIn(email, password)
-                .then((result) => {
-                  console.log(result.user);
-                  toast.success("Successfully registered. Redirecting...");
-                  e.target.reset();
-                  setTimeout(() => {
-                    navigate("/");
-                  }, 2000);
-                })
-                .catch((error) => {
-                  console.log("Error from logging in user" + error);
-                });
-            });
-          })
-          .catch((error) => {
-            console.log("Error from setting username and picture: " + error);
-          });
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      });
+    try {
+      await createUser(email, password);
+      await addUsername(username);
+      await logOut();
+      await signIn(email, password);
+      const newUser = { username, email, role: "user" };
+      const response = await axiosPublic.post("/users", newUser);
+
+      if (response.data.insertedId) {
+        toast.success("Successfully registered. Redirecting...");
+        form.reset();
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      } else {
+        toast.error("Failed to save user data to the database.");
+      }
+    } catch (error) {
+      console.error("Error during registration: ", error);
+      toast.error("Registration failed: " + error.message);
+    }
   };
 
   return (
