@@ -16,6 +16,7 @@ const CreateTable = () => {
       const response = await axiosSecure.post("/users/tables", {
         name: tableName,
         email: user.email,
+        nested: false,
       });
       console.log(response);
       toast.success("Table created successfully");
