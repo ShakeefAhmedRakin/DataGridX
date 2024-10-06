@@ -17,6 +17,11 @@ import Register from "./pages/Public/Register/Register";
 import { Toaster } from "sonner";
 import Login from "./pages/Public/Login/Login";
 
+// USER ROUTES
+import MyTables from "./pages/User/MyTables/MyTables";
+import PrivateRoute from "./routes/PrivateRoute";
+import Table from "./pages/User/Table/Table";
+
 // ALL ROUTES
 const router = createBrowserRouter([
   {
@@ -34,6 +39,24 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login></Login>,
+      },
+
+      // PRIVATE USER ROUTES
+      {
+        path: "/my-tables",
+        element: (
+          <PrivateRoute>
+            <MyTables></MyTables>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/my-tables/:id",
+        element: (
+          <PrivateRoute>
+            <Table></Table>
+          </PrivateRoute>
+        ),
       },
     ],
   },
